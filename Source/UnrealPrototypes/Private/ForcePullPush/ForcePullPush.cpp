@@ -19,6 +19,7 @@ AActor* UForcePullPush::TraceTarget(float range, float radius, ETraceTypeQuery t
 {
 	if (UWorld* world = GetOwner()->GetWorld())
 	{
+		StopPulling();
 		//temp vars
 		TArray<AActor*> actorsToIgnore;
 		actorsToIgnore.Add(GetOwner()); //ignore owner actor
@@ -37,10 +38,11 @@ AActor* UForcePullPush::TraceTarget(float range, float radius, ETraceTypeQuery t
 			hitResult,
 			true //bIgnoreSelf
 		);
-
+		
 		// get actor from hitResult
 		return hitResult.GetActor();
 	}
+	StopPulling();
 	return nullptr;
 }
 
@@ -64,18 +66,18 @@ void UForcePullPush::FindTarget(float range, float radius, ETraceTypeQuery trace
 void UForcePullPush::PullTarget(float speed, float deltaTime)
 {
 	if (!TargetActor) return; //no target to pull
-	if (FVector::Dist(GetOwner()->GetActorLocation(), TargetActor->GetActorLocation()) > 0.1)
+
+	FVector startLocation = TargetActor->GetActorLocation();
+	FVector endLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
+	if (FVector::Dist(startLocation, endLocation) > 0.1)
 	{
 		TargetActor->SetActorLocation(
 			FMath::Lerp(
-			TargetActor->GetActorLocation(), //end
-			GetOwner()->GetActorLocation(), //start
-			speed * deltaTime //alpha
-		));
-	}
-	else
-	{
-		TargetActor->SetActorLocation(GetOwner()->GetActorLocation());
+				TargetActor->GetActorLocation(),
+				GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f,
+				speed * deltaTime
+			)
+		);
 	}
 }
 

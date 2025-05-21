@@ -34,7 +34,7 @@ void UTimeRewinder::RegisterSnapshot()
 			}
 
 			UE_LOG(LogTemp, Warning, TEXT("Snapshot registered: %f, %s"), Timestamp, *CurrentPosition.ToString());
-			DrawDebugSphere(World, Snapshots.Last().Position, 5.0f, 32, FColor::Red, false, 2.0f);
+			//DrawDebugSphere(World, Snapshots.Last().Position, 5.0f, 32, FColor::Red, false, 2.0f);
 		}
 	}
 }
